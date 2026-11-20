@@ -3,7 +3,7 @@
 **Centro Universitario de Guadalajara | Universidad de Guadalajara — Ciclo 2026B**  
 **Profesora:** Martha Ulloa Ramírez  
 **Opción Elegida:** Opción A — Sistema Escolar (tipo SIIAU)  
-**Nombre del Repositorio Público:** `progii-2026b-calderon-alcala`
+**Nombre del Repositorio Público:** `prog2-2026b-calderon-alcala`
 
 ---
 
