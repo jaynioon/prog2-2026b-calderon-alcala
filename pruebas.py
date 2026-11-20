@@ -84,3 +84,65 @@ class TestSistemaEscolar(unittest.TestCase):
         almacen.cargar(self.sistema, "archivo_inexistente_999.json")
         self.assertEqual(len(self.sistema.registros), 0)
         self.assertEqual(len(self.sistema.materias), 0)
+
+    def test_06_rechazo_codigo_invalido_y_nombre_vacio(self) -> None:
+        """Verifica rechazo con ValueError cuando el código no tiene 9 dígitos o falta nombre."""
+        with self.assertRaises(ValueError):
+            Alumno("12345", "Pedro Gómez", "Informática")
+
+        with self.assertRaises(ValueError):
+            Alumno("22000000A", "Pedro Gómez", "Informática")
+
+        with self.assertRaises(ValueError):
+            Alumno("220000005", "   ", "Informática")
+
+    def test_07_rechazo_registro_duplicado(self) -> None:
+        """Verifica que no se permita registrar dos personas con el mismo código."""
+        alumno1 = Alumno("220000006", "Valeria Ruiz", "Informática")
+        alumno2 = Alumno("220000006", "Otro Nombre", "Computación")
+
+        self.sistema.registrar(alumno1)
+        with self.assertRaises(ValueError):
+            self.sistema.registrar(alumno2)
+
+    def test_08_rechazo_asignacion_materia_o_persona_inexistente(self) -> None:
+        """Verifica rechazo al intentar asignar hacia o desde registros que no existen."""
+        alumno = Alumno("220000007", "Andrés Castro", "Informática")
+        materia = Materia("I5888", "Redes", 5)
+        self.sistema.registrar(alumno)
+        self.sistema.registrar(materia)
+
+        with self.assertRaises(ValueError):
+            self.sistema.asignar("220000007", "CLAVE_FALSA")
+
+        with self.assertRaises(ValueError):
+            self.sistema.asignar("999999999", "I5888")
+
+    def test_09_rechazo_asignacion_duplicada_en_misma_materia(self) -> None:
+        """Verifica que una persona no pueda inscribirse dos veces a la misma materia."""
+        alumno = Alumno("220000008", "Camila Soto", "Informática")
+        materia = Materia("I5889", "Sistemas Operativos", 5)
+        self.sistema.registrar(alumno)
+        self.sistema.registrar(materia)
+
+        self.sistema.asignar("220000008", "I5889")
+        with self.assertRaises(ValueError):
+            self.sistema.asignar("220000008", "I5889")
+
+    def test_10_rechazo_por_cupo_lleno(self) -> None:
+        """Verifica que el sistema rechace inscripciones cuando la materia alcanza su cupo."""
+        alumno1 = Alumno("220000009", "Héctor Díaz", "Informática")
+        alumno2 = Alumno("220000010", "Natalia Reyes", "Informática")
+        materia = Materia("I5890", "Taller Avanzado", 1)
+
+        self.sistema.registrar(alumno1)
+        self.sistema.registrar(alumno2)
+        self.sistema.registrar(materia)
+
+        self.sistema.asignar("220000009", "I5890")
+        with self.assertRaises(ValueError):
+            self.sistema.asignar("220000010", "I5890")
+
+
+if __name__ == "__main__":
+    unittest.main(verbosity=2)
