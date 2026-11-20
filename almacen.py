@@ -3,7 +3,7 @@
 Contiene la clase Bitacora para delegación por composición y las funciones
 principales de persistencia con la firma exacta del contrato:
 guardar(sistema, ruta) y cargar(sistema, ruta), implementando la política
-de arranque limpio ante archivos ausentes o dañados.
+de arranque limpio ante archivos dañados.
 """
 
 from datetime import datetime
